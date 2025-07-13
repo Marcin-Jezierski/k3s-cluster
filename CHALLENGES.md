@@ -6,9 +6,9 @@ Dawało to informację, że Ingress działa, ale przekierowanie jest źle skonfi
 Po dłuższym debugowaniu okazało się, że problem wynikał z konfliktu portu 80 na hoście.
 Podczas tworzenia klastra mapowałem port loadbalancera jako 80:80@loadbalancer i próbowałem wyświetlić stronę na domyślnym porcie 80.
 Jednak na Windowsie port 80 był już zajęty przez proces host-switch.exe należący do Rancher Desktop, który zarządza siecią klastra.
-W efekcie ruch na localhost:80 nie trafiał do mojego Ingressa, tylko do tego procesu, co powodowało błąd 404 i mylne wrażenie istnienia domyślnego Ingressa w Rancher Desktop.
+W efekcie ruch na localhost:80 nie trafiał do mojego Ingressa, tylko do tego procesu, co powodowało błąd 404 i mylne wrażenie błędnej konfiguracji mojego ingressu.
 
-Rozwiązaniem było użycie innego portu hosta, np. 8080:80@loadbalancer, aby uniknąć konfliktu i poprawnie kierować ruch do mojego serwisu.
+Rozwiązaniem było użycie innego portu hosta, np. 8086:80@loadbalancer, aby uniknąć konfliktu i poprawnie kierować ruch do mojego serwisu.
 
 ## 2. Problem z lokalizacją plików HTML w podzie frontend-nginx
 
