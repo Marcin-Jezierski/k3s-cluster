@@ -1,10 +1,131 @@
+## @param ingress.enabled Enable or disable ingress for the frontend service.
+ingress:
+  enabled: true
+
+  ## @param ingress.ingressClassName Name of the ingress class to use.
+  ingressClassName: nginx
+
+  ## @param ingress.hostname Hostname used in ingress rules.
+  hostname: myapp.local
+
+  ## @param ingress.pathType Path matching strategy for ingress.
+  pathType: Prefix
+
+  ## @param ingress.paths List of HTTP ingress paths and backends.
+  paths:
+    - path: /
+      ## @param ingress.paths[].pathType Path matching type for this path.
+      pathType: Prefix
+      backend:
+        service:
+          ## @param ingress.paths[].backend.service.name Name of the backend service.
+          name: frontend-nginx
+
+          ## @param ingress.paths[].backend.service.namespace Namespace of the backend service.
+          namespace: minio
+
+          ## @param ingress.paths[].backend.service.port.port Backend service port number.
+          port:
+            number: 80
+
+## @param service.type Kubernetes service type (e.g., ClusterIP, NodePort).
+service:
+  type: ClusterIP
+
+  ## @param service.port Service port number.
+  port: 80
+
+## @param serverBlock Custom NGINX server block configuration for frontend.
+serverBlock: |-
+  server {
+    listen 80;
+    root /app;
+    index index.html;
+
+    location / {
+      try_files $uri $uri/ /index.html;
+    }
+  }
+
+## @param extraVolumes List of extra volumes to add to the pod.
+extraVolumes:
+  - name: html-content
+    configMap:
+      ## @param extraVolumes[].configMap.name Name of the ConfigMap to mount as a volume.
+      name: frontend-html
+
+## @param extraVolumeMounts List of extra volume mounts inside the container.
+extraVolumeMounts:
+  - name: html-content
+    ## @param extraVolumeMounts[].mountPath Path inside the container to mount the volume.
+    mountPath: /app
+
+
+
+
+# # ingress:
+# #   enabled: true
+# #   ingressClassName: nginx
+# #   hostname: myapp.local
+# #   annotations:
+# #     nginx.ingress.kubernetes.io/rewrite-target: /
+# #   tls: []
+# #   pathType: Prefix
+# #   paths:
+# #     - path: /
+# #       pathType: Prefix
+# #       backend:
+# #         service:
+# #           name: frontend-nginx
+# #           port:
+# #             number: 80
+# #     - path: /minio
+# #       pathType: Prefix
+# #       backend:
+# #         service:
+# #           name: frontend-nginx
+# #           port:
+# #             number: 80
+
+
+# # service:
+# #   type: ClusterIP
+# #   port: 80
+
+# # serverBlock: |-
+# #   server {
+# #     listen 80;
+# #     root /app;
+# #     index index.html;
+
+# #     location / {
+# #       try_files $uri $uri/ /index.html;
+# #     }
+
+# #     location /minio {
+# #      proxy_pass http://minio.minio.svc.cluster.local:9000;
+# #      proxy_set_header Host $host;
+# #      proxy_set_header X-Real-IP $remote_addr;
+# #      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# #     }
+# #   }
+
+
+
+# # extraVolumes:
+# #   - name: html-content
+# #     configMap:
+# #       name: frontend-html
+
+# # extraVolumeMounts:
+# #   - name: html-content
+# #     mountPath: /app
+
+
 # ingress:
 #   enabled: true
 #   ingressClassName: nginx
 #   hostname: myapp.local
-#   annotations:
-#     nginx.ingress.kubernetes.io/rewrite-target: /
-#   tls: []
 #   pathType: Prefix
 #   paths:
 #     - path: /
@@ -12,16 +133,9 @@
 #       backend:
 #         service:
 #           name: frontend-nginx
+#           namespace: minio
 #           port:
 #             number: 80
-#     - path: /minio
-#       pathType: Prefix
-#       backend:
-#         service:
-#           name: frontend-nginx
-#           port:
-#             number: 80
-
 
 # service:
 #   type: ClusterIP
@@ -36,16 +150,7 @@
 #     location / {
 #       try_files $uri $uri/ /index.html;
 #     }
-
-#     location /minio {
-#      proxy_pass http://minio.minio.svc.cluster.local:9000;
-#      proxy_set_header Host $host;
-#      proxy_set_header X-Real-IP $remote_addr;
-#      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#     }
 #   }
-
-
 
 # extraVolumes:
 #   - name: html-content
@@ -55,52 +160,3 @@
 # extraVolumeMounts:
 #   - name: html-content
 #     mountPath: /app
-
-
-ingress:
-  enabled: true
-  ingressClassName: nginx
-  hostname: myapp.local
-  annotations: {}  # <-- Remove the rewrite-target here
-  tls: []
-  pathType: Prefix
-  paths:
-    - path: /
-      pathType: Prefix
-      backend:
-        service:
-          name: frontend-nginx
-          namespace: minio
-          port:
-            number: 80
-
-service:
-  type: ClusterIP
-  port: 80
-
-serverBlock: |-
-  server {
-    listen 80;
-    root /app;
-    index index.html;
-
-    location / {
-      try_files $uri $uri/ /index.html;
-    }
-
-    location /minio {
-      proxy_pass http://minio.minio.svc.cluster.local:9000;
-      proxy_set_header Host $host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-  }
-
-extraVolumes:
-  - name: html-content
-    configMap:
-      name: frontend-html
-
-extraVolumeMounts:
-  - name: html-content
-    mountPath: /app

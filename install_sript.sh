@@ -15,8 +15,7 @@ echo "Creating K3D HA cluster..."
 k3d cluster create ha-cluster \
   --servers 3 \
   --agents 2 \
-  -p "8080:80@loadbalancer" \
-  -p "443:443@loadbalancer" \
+  -p "8086:80@loadbalancer" \
   --k3s-arg "--disable=traefik@server:*"
 
 # Step 2: Install Ingress-NGINX
@@ -27,6 +26,11 @@ helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
   --create-namespace
+
+# Wait for the ingress-nginx controller to be ready
+echo "Waiting for ingress-nginx controller to be ready..."
+kubectl rollout status deployment/ingress-nginx-controller \
+  -n ingress-nginx --timeout=120s
 
 # Step 3: Deploy MinIO
 echo "Installing MinIO..."
@@ -81,4 +85,4 @@ helm upgrade --install frontend bitnami/nginx \
   --create-namespace \
   -f ./k3s/values/values-frontend.yaml
 
-echo "Setup complete. Access your app via http://myapp.local:8080"
+echo "Setup complete. Access your app via http://myapp.local:8086"
