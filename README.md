@@ -6,6 +6,15 @@ Projekt uruchamia lokalny, multi-node klaster k3s z wykorzystaniem k3d, instaluj
 - MinIO jako obiektowy storage
 - nginx-frontend – statyczny serwis zwracający przygotowany plik HTML z trzema obrazkami pobranymi z MinIO
 
+## Uwierzytelnianie do MinIO
+
+Dane uwierzytelniające do serwisu MinIO są na stałe zapisane (hardcoded) w konfiguracji. W środowisku produkcyjnym zdecydowanie skorzystałbym z bezpieczniejszych mechanizmów, takich jak zasoby Kubernetes `Secrets`, które pozwalają na bezpieczne przechowywanie haseł i kluczy dostępu.
+
+## Główne wyzwania i problemy
+
+Podczas tworzenia tego demo napotkałem kilka istotnych problemów i wyzwań. Opisy znajdują się w pliku `CHALLENGES.md`.
+
+
 ## Wymagania
 - Kubernetes CLI (kubectl)
 - Helm
