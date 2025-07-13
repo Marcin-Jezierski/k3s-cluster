@@ -19,7 +19,7 @@ Projekt uruchamia lokalny, multi-node klaster k3s z wykorzystaniem k3d, instaluj
 
 1. Sklonuj repozytorium:
 ```bash
-git https://github.com/Marcin-Jezierski/k3s-cluster.git
+git clone https://github.com/Marcin-Jezierski/k3s-cluster.git
 cd k3s-cluster
 ```
 
