@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # Check for required tools
-for cmd in kubectl helm mc; do
+for cmd in k3d kubectl helm mc; do
   if ! command -v "$cmd" &> /dev/null; then
     echo "Error: '$cmd' is not installed or not in PATH."
     exit 1

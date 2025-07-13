@@ -11,7 +11,7 @@ Projekt uruchamia lokalny, multi-node klaster k3s z wykorzystaniem k3d, instaluj
 - Helm
 - mc (MinIO Client)
 - k3d
-- Docker lub inny kompatybilny container runtime
+- Container Runtime: dockerd
 
 ---
 
